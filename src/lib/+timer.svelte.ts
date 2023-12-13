@@ -1,22 +1,36 @@
 export default function Timer() {
-    let timer = $state(0)
+    let timer = $state(0);
+    let intervalId: number | null = null;
 
-    let running = $state(false)
+    let running = $state(false);
 
     $effect(() => {
         if (running) {
-            setInterval(() => {
-                timer++
-            }, 1000)
+            intervalId = setInterval(() => {
+                timer++;
+            }, 1000);
         }
-    })
+
+        return () => {
+            if (intervalId !== null) {
+                clearInterval(intervalId);
+            }
+        };
+    });
 
     function StartTimer() {
         running = true;
     }
 
-    return {
-        get timer() { return timer },
-        StartTimer
+    function StopTimer() {
+        running = false;
     }
+
+    return {
+        get timer() {
+            return timer;
+        },
+        StartTimer,
+        StopTimer,
+    };
 }

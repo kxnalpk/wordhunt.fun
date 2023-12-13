@@ -1,6 +1,6 @@
 <script context="module">
     import words from '../words.json';
-    import timertimer from '../lib/+timer.svelte'
+    import Timer from '../lib/+timer.svelte';
 </script>
 
 <script lang="ts">
@@ -13,6 +13,11 @@
     let result: string = '';
     let isMobile: boolean;
     let showInput: boolean = false;
+
+    let questionsCounter: number = 0;
+    const maxQuestions: number = 3;
+
+    const timer = Timer();
 
     function getRandomWord(): string {
         const randomWordIndex = Math.floor(Math.random() * words.length);
@@ -35,11 +40,8 @@
         return result;
     }
 
-    const timer = timertimer();
-
     function handleKeyDown(event: KeyboardEvent) {
         if (event.key === 'Enter') {
-
             if (!gameStarted) {
                 startGame();
             } else {
@@ -50,7 +52,6 @@
 
     onMount(() => {
         isMobile = window.innerWidth < 600;
-        localStorage.removeItem('hiddenWord');
         document.addEventListener('keydown', handleKeyDown);
 
         return () => {
@@ -63,16 +64,23 @@
     });
 
     function startGame() {
-        timer.StartTimer();
-        gameStarted = true;
-        const word = getRandomWord();
-        randomString = String(word, 60);
-        message = '';
-        userInput = '';
-        result = '';
-        showInput = true;
-        localStorage.setItem('hiddenWord', word.toLowerCase());
-        console.log(word.toLowerCase());
+        if (questionsCounter < maxQuestions) {
+            timer.StartTimer();
+            gameStarted = true;
+            const word = getRandomWord();
+            randomString = String(word, 60);
+            message = '';
+            userInput = '';
+            result = '';
+            showInput = true;
+            localStorage.setItem('hiddenWord', word.toLowerCase());
+            console.log(word.toLowerCase());
+            questionsCounter++;
+        } else {
+            showInput = false;
+            timer.StopTimer();
+            message = `Game Over! You answered ${maxQuestions} questions in ${timer.timer} seconds.`;
+        }
     }
 
     function checkUserInput() {
@@ -82,6 +90,7 @@
         if (trimmedUserInput === hiddenWord) {
             result = 'Correct!';
             localStorage.removeItem('hiddenWord');
+            timer.StopTimer();
             startGame();
         } else if (trimmedUserInput === '') {
             return;
