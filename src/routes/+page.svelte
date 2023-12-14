@@ -120,7 +120,7 @@
             <div class="break-words text-center">
                 {message}
                 {#if isMobile}
-                    <button on:click={startGame} class="text-blue-500 underline"
+                    <button on:click={startGame} class="text-blue-500"
                         >(Enter)</button
                     >
                 {/if}
@@ -139,6 +139,7 @@
             bind:value={userInput}
             placeholder="Type the hidden word"
             on:keydown={handleKeyDown}
+            autofocus={true}
         />
         {#if result}
             <p
