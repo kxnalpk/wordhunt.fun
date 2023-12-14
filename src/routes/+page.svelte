@@ -4,7 +4,6 @@
 </script>
 
 <script lang="ts">
-
     import { onMount, onDestroy } from "svelte";
 
     let gameStarted: boolean = false;
@@ -85,7 +84,6 @@
             showInput = false;
             timer.StopTimer();
             message = `You answered ${maxQuestions} questions in ${timer.timer} seconds.`;
-
         }
     }
 
@@ -104,7 +102,6 @@
             result = "Wrong!";
         }
     }
-
 </script>
 
 <svelte:head>
@@ -116,7 +113,6 @@
 </svelte:head>
 
 <main class="flex flex-col items-center justify-center h-[100svh] gap-6">
-    <div class="text-white">{timer.timer}</div>
     <div
         class="bg-[#30343E] w-full sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%] p-4 text-white overflow-hidden"
     >
