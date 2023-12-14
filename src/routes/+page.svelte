@@ -84,7 +84,7 @@
         } else {
             showInput = false;
             timer.StopTimer();
-            message = `Game Over! You answered ${maxQuestions} questions in ${timer.timer} seconds.`;
+            message = `You answered ${maxQuestions} questions in ${timer.timer} seconds.`;
 
         }
     }
