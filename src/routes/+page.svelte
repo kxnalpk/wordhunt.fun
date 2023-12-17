@@ -5,6 +5,7 @@
 </script>
 
 <script lang="ts">
+    // Import statements
     import { onMount, onDestroy } from "svelte";
     import { fade, fly, scale } from 'svelte/transition';
 
@@ -14,7 +15,6 @@
     let message = "Press 'Enter' to start the game";
     let userInput = "";
     let result = "";
-    let isMobile = false;
     let showInput = false;
 
     // Countdown variables
@@ -80,7 +80,6 @@
 
     // Lifecycle hooks for adding/removing event listeners
     onMount(() => {
-        isMobile = window.innerWidth < 600;
         document.addEventListener("keydown", handleKeyDown);
         return () => document.removeEventListener("keydown", handleKeyDown);
     });
@@ -124,6 +123,10 @@
         timer.StopTimer();
         message = `You answered ${maxQuestions} questions in ${timer.timer} seconds.`;
     }
+
+    // Check if it's a mobile device
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
 </script>
 
 <svelte:head>
