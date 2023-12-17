@@ -4,12 +4,6 @@
     import Timer from "../lib/+timer.svelte";
 </script>
 
-<<script context="module">
-    // Import statements
-    import words from "../words.json";
-    import Timer from "../lib/+timer.svelte";
-</script>
-
 <script lang="ts">
     // Import statements
     import { onMount, onDestroy } from "svelte";
