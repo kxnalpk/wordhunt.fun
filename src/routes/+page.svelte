@@ -1,4 +1,5 @@
 <script context="module">
+    // Import statements
     import words from "../words.json";
     import Timer from "../lib/+timer.svelte";
 </script>
@@ -7,50 +8,57 @@
     import { onMount, onDestroy } from "svelte";
     import { fade, fly, scale } from 'svelte/transition';
 
-    let gameStarted: boolean = false;
-    let randomString: string = "";
-    let message: string = "Press 'Enter' to start the game";
-    let userInput: string = "";
-    let result: string = "";
-    let isMobile: boolean;
-    let showInput: boolean = false;
+    // State variables
+    let gameStarted = false;
+    let randomString = "";
+    let message = "Press 'Enter' to start the game";
+    let userInput = "";
+    let result = "";
+    let isMobile = false;
+    let showInput = false;
 
-    let countdown: number = 3;
-    let isCountdown: boolean = false;
+    // Countdown variables
+    let countdown = 3;
+    let isCountdown = false;
 
-    let questionsCounter: number = 0;
-    const maxQuestions: number = 3;
+    // Game configuration
+    let questionsCounter = 0;
+    const maxQuestions = 3;
 
+    // Timer instance
     const timer = Timer();
 
+    // Fetch a random word from the imported list
     function getRandomWord(): string {
-        const randomWordIndex = Math.floor(Math.random() * words.length);
-        return words[randomWordIndex];
+        const randomIndex = Math.floor(Math.random() * words.length);
+        return words[randomIndex];
     }
 
-    function String(word: string, length: number): string {
+    // Generate a random string embedding a word
+    function embedWordInString(word: string, length: number): string {
         const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         let result = "";
-        const randomPosition = Math.floor(Math.random() * (length - word.length));
-        const randomCaseWord = word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        const embedPosition = Math.floor(Math.random() * (length - word.length));
+        const formattedWord = word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 
         for (let i = 0; i < length; i++) {
-            if (i === randomPosition) {
-                result += randomCaseWord;
-                i += word.length - 1; // Skip ahead by the length of the word
+            if (i === embedPosition) {
+                result += formattedWord;
+                i += word.length - 1;
             } else {
-                const randomIndex = Math.floor(Math.random() * characters.length);
-                result += characters.charAt(randomIndex);
+                const charIndex = Math.floor(Math.random() * characters.length);
+                result += characters.charAt(charIndex);
             }
         }
         return result;
     }
 
+    // Initialize countdown for game start
     function startCountdown() {
         message = "";
         isCountdown = true;
         const countdownInterval = setInterval(() => {
-            countdown -= 1;
+            countdown--;
             if (countdown === 0) {
                 clearInterval(countdownInterval);
                 isCountdown = false;
@@ -59,6 +67,7 @@
         }, 1000);
     }
 
+    // Handle key events for game control
     function handleKeyDown(event: KeyboardEvent) {
         if (event.key === "Enter") {
             if (!gameStarted && !isCountdown) {
@@ -69,52 +78,51 @@
         }
     }
 
+    // Lifecycle hooks for adding/removing event listeners
     onMount(() => {
         isMobile = window.innerWidth < 600;
         document.addEventListener("keydown", handleKeyDown);
-
-        return () => {
-            document.removeEventListener("keydown", handleKeyDown);
-        };
+        return () => document.removeEventListener("keydown", handleKeyDown);
     });
 
-    onDestroy(() => {
-        localStorage.removeItem("hiddenWord");
-    });
+    onDestroy(() => localStorage.removeItem("hiddenWord"));
 
+    // Start the game by setting up the word and timer
     function startGame() {
         if (questionsCounter < maxQuestions) {
             timer.StartTimer();
             gameStarted = true;
             const word = getRandomWord();
-            randomString = String(word, 60);
+            randomString = embedWordInString(word, 60);
             userInput = "";
             result = "";
             showInput = true;
             localStorage.setItem("hiddenWord", word.toLowerCase());
-            console.log(word.toLowerCase());
             questionsCounter++;
         } else {
-            showInput = false;
-            timer.StopTimer();
-            message = `You answered ${maxQuestions} questions in ${timer.timer} seconds.`;
+            finishGame();
         }
     }
 
+    // Check user input against the hidden word
     function checkUserInput() {
-        const trimmedUserInput = userInput.trim().toLowerCase();
+        const trimmedInput = userInput.trim().toLowerCase();
         const hiddenWord = localStorage.getItem("hiddenWord");
-
-        if (trimmedUserInput === hiddenWord) {
+        if (trimmedInput === hiddenWord) {
             result = "Correct!";
             localStorage.removeItem("hiddenWord");
             timer.StopTimer();
             startGame();
-        } else if (trimmedUserInput === "") {
-            return;
-        } else {
+        } else if (trimmedInput !== "") {
             result = "Wrong!";
         }
+    }
+
+    // Finalize game and display results
+    function finishGame() {
+        showInput = false;
+        timer.StopTimer();
+        message = `You answered ${maxQuestions} questions in ${timer.timer} seconds.`;
     }
 </script>
 
