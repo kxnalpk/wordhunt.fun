@@ -1,15 +1,7 @@
 <script context="module">
     // Import statements
     import words from "../words.json";
-    import Timer from "../lib/+timer.svelte";
-    import { onMount } from "svelte";
-
-    let isMobile = false;
-
-    // Check if it's a mobile device after the component is mounted
-    onMount(() => {
-    isMobile = window.innerWidth <= 800;
-  });
+    import Timer from "../lib/+timer.svelte"
 </script>
 
 <script lang="ts">
@@ -24,6 +16,7 @@
     let userInput = "";
     let result = "";
     let showInput = false;
+    let isMobile = false;
 
     // Countdown variables
     let countdown = 3;
@@ -35,6 +28,11 @@
 
     // Timer instance
     const timer = Timer();
+
+    // Check if it's a mobile device after the component is mounted
+    onMount(() => {
+    isMobile = window.innerWidth <= 800;
+    });
 
     // Fetch a random word from the imported list
     function getRandomWord(): string {
