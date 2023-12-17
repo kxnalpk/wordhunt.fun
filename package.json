@@ -32,11 +32,6 @@
 		"@babylonjs/core": "^6.34.1",
 		"animejs": "^3.2.2",
 		"crypto": "^1.0.1",
-		"framer-motion": "^10.16.16",
-		"next": "^14.0.4",
-		"particles.js": "^2.0.0",
-		"random-words": "^2.0.0",
-		"three": "^0.159.0",
-		"vanta": "^0.5.24"
+		"next": "^14.0.4"
 	}
 }
