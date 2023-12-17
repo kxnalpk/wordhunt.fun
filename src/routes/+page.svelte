@@ -1,7 +1,15 @@
 <script context="module">
     // Import statements
     import words from "../words.json";
-    import Timer from "../lib/+timer.svelte"; 
+    import Timer from "../lib/+timer.svelte";
+    import { onMount } from "svelte";
+
+    let isMobile = false;
+
+    onMount(() => {
+    // Check if it's a mobile device after the component is mounted
+    isMobile = window.innerWidth <= 800;
+  });
 </script>
 
 <script lang="ts">
@@ -16,7 +24,6 @@
     let userInput = "";
     let result = "";
     let showInput = false;
-    let isMobile = window.innerWidth <= 800;
 
     // Countdown variables
     let countdown = 3;
