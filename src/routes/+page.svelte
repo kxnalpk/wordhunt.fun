@@ -6,8 +6,8 @@
 
     let isMobile = false;
 
-    onMount(() => {
     // Check if it's a mobile device after the component is mounted
+    onMount(() => {
     isMobile = window.innerWidth <= 800;
   });
 </script>
