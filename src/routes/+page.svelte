@@ -31,11 +31,13 @@
     function String(word: string, length: number): string {
         const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         let result = "";
+        const randomPosition = Math.floor(Math.random() * (length - word.length));
+        const randomCaseWord = word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 
         for (let i = 0; i < length; i++) {
-            if (i === length / 2) {
-                const randomCaseWord = word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+            if (i === randomPosition) {
                 result += randomCaseWord;
+                i += word.length - 1; // Skip ahead by the length of the word
             } else {
                 const randomIndex = Math.floor(Math.random() * characters.length);
                 result += characters.charAt(randomIndex);
