@@ -4,6 +4,12 @@
     import Timer from "../lib/+timer.svelte";
 </script>
 
+<<script context="module">
+    // Import statements
+    import words from "../words.json";
+    import Timer from "../lib/+timer.svelte";
+</script>
+
 <script lang="ts">
     // Import statements
     import { onMount, onDestroy } from "svelte";
@@ -15,7 +21,6 @@
     let message = "Press 'Enter' to start the game";
     let userInput = "";
     let result = "";
-    let isMobile = false;
     let showInput = false;
 
     // Countdown variables
@@ -81,7 +86,6 @@
 
     // Lifecycle hooks for adding/removing event listeners
     onMount(() => {
-        isMobile = checkIsMobile();
         document.addEventListener("keydown", handleKeyDown);
         return () => document.removeEventListener("keydown", handleKeyDown);
     });
@@ -127,10 +131,8 @@
     }
 
     // Check if it's a mobile device
-    const checkIsMobile = () => {
-        const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        return isMobileDevice;
-    }
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
 </script>
 
 <svelte:head>
