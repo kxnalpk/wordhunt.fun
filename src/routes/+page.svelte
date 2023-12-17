@@ -16,6 +16,7 @@
     let userInput = "";
     let result = "";
     let showInput = false;
+    let isMobile = window.innerWidth <= 800;
 
     // Countdown variables
     let countdown = 3;
@@ -123,9 +124,6 @@
         timer.StopTimer();
         message = `You answered ${maxQuestions} questions in ${timer.timer} seconds.`;
     }
-
-    // Check if it's a mobile device
-    const isMobile = window.innerWidth <= 800;
 
 </script>
 
