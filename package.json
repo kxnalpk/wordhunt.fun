@@ -13,9 +13,11 @@
 		"@neoconfetti/svelte": "^1.0.0",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.27.4",
+		"@types/animejs": "^3.1.12",
 		"@types/cookie": "^0.5.1",
 		"@types/next": "^9.0.0",
 		"@types/node": "^20.10.4",
+		"@types/three": "^0.159.0",
 		"autoprefixer": "^10.4.16",
 		"postcss": "^8.4.31",
 		"svelte": "^5.0.0-next.24",
@@ -27,8 +29,14 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@babylonjs/core": "^6.34.1",
+		"animejs": "^3.2.2",
 		"crypto": "^1.0.1",
+		"framer-motion": "^10.16.16",
 		"next": "^14.0.4",
-		"random-words": "^2.0.0"
+		"particles.js": "^2.0.0",
+		"random-words": "^2.0.0",
+		"three": "^0.159.0",
+		"vanta": "^0.5.24"
 	}
 }
