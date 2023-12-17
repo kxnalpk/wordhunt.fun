@@ -5,6 +5,7 @@
 </script>
 
 <script lang="ts">
+    // Import statements
     import { onMount, onDestroy } from "svelte";
     import { fade, fly, scale } from 'svelte/transition';
 
@@ -80,7 +81,7 @@
 
     // Lifecycle hooks for adding/removing event listeners
     onMount(() => {
-        isMobile = window.innerWidth < 600;
+        isMobile = checkIsMobile();
         document.addEventListener("keydown", handleKeyDown);
         return () => document.removeEventListener("keydown", handleKeyDown);
     });
@@ -123,6 +124,12 @@
         showInput = false;
         timer.StopTimer();
         message = `You answered ${maxQuestions} questions in ${timer.timer} seconds.`;
+    }
+
+    // Check if it's a mobile device
+    const checkIsMobile = () => {
+        const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        return isMobileDevice;
     }
 </script>
 
