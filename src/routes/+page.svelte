@@ -29,7 +29,7 @@
     // Timer instance
     const timer = Timer();
 
-    // Check if it's a mobile device after the component is mounted
+    // Check if it's a mobile device
     onMount(() => {
     isMobile = window.innerWidth <= 800;
     });
