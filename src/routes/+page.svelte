@@ -1,7 +1,7 @@
 <script context="module">
     // Import statements
     import words from "../words.json";
-    import Timer from "../lib/+timer.svelte";
+    import Timer from "../lib/+timer.svelte"
 </script>
 
 <script lang="ts">
@@ -16,6 +16,7 @@
     let userInput = "";
     let result = "";
     let showInput = false;
+    let isMobile = false;
 
     // Countdown variables
     let countdown = 3;
@@ -27,6 +28,11 @@
 
     // Timer instance
     const timer = Timer();
+
+    // Check if it's a mobile device
+    onMount(() => {
+    isMobile = window.innerWidth <= 800;
+    });
 
     // Fetch a random word from the imported list
     function getRandomWord(): string {
@@ -124,9 +130,6 @@
         message = `You answered ${maxQuestions} questions in ${timer.timer} seconds.`;
     }
 
-    // Check if it's a mobile device
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
 </script>
 
 <svelte:head>
@@ -134,14 +137,14 @@
     <meta name="description" content="Challenge your eyes and hunt for words within sentences that do not contain any spaces between them."/>
 </svelte:head>
 
-<main class="flex flex-col items-center justify-center h-[100svh] gap-6 overflow-hidden">
+<main class="flex flex-col items-center justify-center h-screen gap-6 overflow-hidden">
     {#if !isCountdown}
-        <div class="bg-[#30343E] w-full sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%] p-4 text-white overflow-hidden">
+        <div class="bg-[#30343E] w-full max-w-[80%] p-4 text-white overflow-hidden">
             {#if message}
                 <div class="break-words text-center" in:fade={{ duration: 500 }}>
                     {message}
                     {#if isMobile}
-                        <button on:click={startGame} class="text-blue-500" in:fade={{ duration: 500 }}>(Enter)</button>
+                        <button on:click={startGame} class="text-blue-500 block mx-auto mt-4 p-2 bg-gray-800 rounded">Start Game</button>
                     {/if}
                 </div>
             {:else}
@@ -153,22 +156,24 @@
     {/if}
 
     {#if showInput}
-        <input
-            class="focus:border-[#3f4358] focus:outline-none text-white bg-[#30343E] w-full sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%] p-4 overflow-hidden"
-            type="text"
-            bind:value={userInput}
-            placeholder="Type the hidden word"
-            on:keydown={handleKeyDown}
-            in:fly={{ x: 200, duration: 100 }}
-        />
-        {#if result}
-            <p
-                class={result === "Correct!" ? "text-green-500" : "text-red-500"}
-                in:scale={{ start: 0.5, duration: 300 }}
-            >
-                {result}
-            </p>
-        {/if}
+        <div class="flex flex-col items-center">
+            <input
+                class="focus:border-[#3f4358] focus:outline-none text-white bg-[#30343E] w-full max-w-[80%] p-4 mt-4 rounded"
+                type="text"
+                bind:value={userInput}
+                placeholder="Type the hidden word"
+                on:keydown={handleKeyDown}
+                in:fly={{ x: 200, duration: 100 }}
+            />
+            {#if result}
+                <p
+                    class={result === "Correct!" ? "text-green-500" : "text-red-500"}
+                    in:scale={{ start: 0.5, duration: 300 }}
+                >
+                    {result}
+                </p>
+            {/if}
+        </div>
     {/if}
 
     {#if isCountdown}
