@@ -1,11 +1,10 @@
 <script context="module">
     // Import statements
     import words from "../words.json";
-    import Timer from "../lib/+timer.svelte"
+    import Timer from "../lib/+timer.svelte";
 </script>
 
 <script lang="ts">
-    // Import statements
     import { onMount, onDestroy } from "svelte";
     import { fade, fly, scale } from 'svelte/transition';
 
@@ -15,8 +14,8 @@
     let message = "Press 'Enter' to start the game";
     let userInput = "";
     let result = "";
-    let showInput = false;
     let isMobile = false;
+    let showInput = false;
 
     // Countdown variables
     let countdown = 3;
@@ -28,11 +27,6 @@
 
     // Timer instance
     const timer = Timer();
-
-    // Check if it's a mobile device
-    onMount(() => {
-    isMobile = window.innerWidth <= 800;
-    });
 
     // Fetch a random word from the imported list
     function getRandomWord(): string {
@@ -86,11 +80,18 @@
 
     // Lifecycle hooks for adding/removing event listeners
     onMount(() => {
-        document.addEventListener("keydown", handleKeyDown);
-        return () => document.removeEventListener("keydown", handleKeyDown);
+        isMobile = window.innerWidth < 600;
+        if (!isMobile) {
+            document.addEventListener("keydown", handleKeyDown);
+        }
     });
 
-    onDestroy(() => localStorage.removeItem("hiddenWord"));
+    onDestroy(() => {
+        localStorage.removeItem("hiddenWord");
+        if (!isMobile) {
+            document.removeEventListener("keydown", handleKeyDown);
+        }
+    });
 
     // Start the game by setting up the word and timer
     function startGame() {
@@ -129,7 +130,6 @@
         timer.StopTimer();
         message = `You answered ${maxQuestions} questions in ${timer.timer} seconds.`;
     }
-
 </script>
 
 <svelte:head>
@@ -143,8 +143,8 @@
             {#if message}
                 <div class="break-words text-center" in:fade={{ duration: 500 }}>
                     {message}
-                    {#if isMobile}
-                        <button on:click={startGame} class="text-blue-500" in:fade={{ duration: 500 }}>(Enter)</button>
+                    {#if isMobile && !gameStarted && !isCountdown}
+                        <button on:click={startCountdown} class="start-button">(Start)</button>
                     {/if}
                 </div>
             {:else}
