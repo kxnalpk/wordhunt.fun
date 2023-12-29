@@ -80,7 +80,7 @@
 
     // Lifecycle hooks for adding/removing event listeners
     onMount(() => {
-        isMobile = window.innerWidth < 600;
+        isMobile = window.innerWidth < 769;
         if (!isMobile) {
             document.addEventListener("keydown", handleKeyDown);
         }
