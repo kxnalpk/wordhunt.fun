@@ -17,6 +17,9 @@
     let isMobile = false;
     let showInput = false;
 
+    // New state variable for localStorage availability
+    let isLocalStorageAvailable = true;
+
     // Countdown variables
     let countdown = 3;
     let isCountdown = false;
@@ -27,6 +30,17 @@
 
     // Timer instance
     const timer = Timer();
+
+    // Utility function to check localStorage access
+    function checkLocalStorageAccess() {
+        try {
+            localStorage.setItem("test", "test");
+            localStorage.removeItem("test");
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
 
     // Fetch a random word from the imported list
     function getRandomWord(): string {
@@ -80,15 +94,18 @@
 
     // Lifecycle hooks for adding/removing event listeners
     onMount(() => {
+        isLocalStorageAvailable = checkLocalStorageAccess();
         isMobile = window.innerWidth < 769;
-        if (!isMobile) {
+        if (!isMobile && isLocalStorageAvailable) {
             document.addEventListener("keydown", handleKeyDown);
         }
     });
 
     onDestroy(() => {
-        localStorage.removeItem("hiddenWord");
-        if (!isMobile) {
+        if (isLocalStorageAvailable) {
+            localStorage.removeItem("hiddenWord");
+        }
+        if (!isMobile && isLocalStorageAvailable) {
             document.removeEventListener("keydown", handleKeyDown);
         }
     });
@@ -103,7 +120,9 @@
             userInput = "";
             result = "";
             showInput = true;
-            localStorage.setItem("hiddenWord", word.toLowerCase());
+            if (isLocalStorageAvailable) {
+                localStorage.setItem("hiddenWord", word.toLowerCase());
+            }
             questionsCounter++;
         } else {
             finishGame();
@@ -112,15 +131,17 @@
 
     // Check user input against the hidden word
     function checkUserInput() {
-        const trimmedInput = userInput.trim().toLowerCase();
-        const hiddenWord = localStorage.getItem("hiddenWord");
-        if (trimmedInput === hiddenWord) {
-            result = "Correct!";
-            localStorage.removeItem("hiddenWord");
-            timer.StopTimer();
-            startGame();
-        } else if (trimmedInput !== "") {
-            result = "Wrong!";
+        if (isLocalStorageAvailable) {
+            const trimmedInput = userInput.trim().toLowerCase();
+            const hiddenWord = localStorage.getItem("hiddenWord");
+            if (trimmedInput === hiddenWord) {
+                result = "Correct!";
+                localStorage.removeItem("hiddenWord");
+                timer.StopTimer();
+                startGame();
+            } else if (trimmedInput !== "") {
+                result = "Wrong!";
+            }
         }
     }
 
@@ -138,45 +159,51 @@
 </svelte:head>
 
 <main class="flex flex-col items-center justify-center h-[100svh] gap-6 overflow-hidden">
-    {#if !isCountdown}
-        <div class="bg-[#30343E] w-full sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%] p-4 text-white overflow-hidden">
-            {#if message}
-                <div class="break-words text-center" in:fade={{ duration: 500 }}>
-                    {message}
-                    {#if isMobile && !gameStarted && !isCountdown}
-                        <button on:click={startCountdown} class="start-button">(Start)</button>
-                    {/if}
-                </div>
-            {:else}
-                <div class="break-words text-center">
-                    {randomString}
-                </div>
-            {/if}
-        </div>
-    {/if}
+    {#if isLocalStorageAvailable}
+        {#if !isCountdown}
+            <div class="bg-[#30343E] w-full sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%] p-4 text-white overflow-hidden">
+                {#if message}
+                    <div class="break-words text-center" in:fade={{ duration: 500 }}>
+                        {message}
+                        {#if isMobile && !gameStarted && !isCountdown}
+                            <button on:click={startCountdown} class="start-button">(Start)</button>
+                        {/if}
+                    </div>
+                {:else}
+                    <div class="break-words text-center">
+                        {randomString}
+                    </div>
+                {/if}
+            </div>
+        {/if}
 
-    {#if showInput}
-        <input
-            class="focus:border-[#3f4358] focus:outline-none text-white bg-[#30343E] w-full sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%] p-4 overflow-hidden"
-            type="text"
-            bind:value={userInput}
-            placeholder="Type the hidden word"
-            on:keydown={handleKeyDown}
-            in:fly={{ x: 200, duration: 100 }}
-        />
-        {#if result}
-            <p
-                class={result === "Correct!" ? "text-green-500" : "text-red-500"}
-                in:scale={{ start: 0.5, duration: 300 }}
-            >
-                {result}
+        {#if showInput}
+            <input
+                class="focus:border-[#3f4358] focus:outline-none text-white bg-[#30343E] w-full sm:max-w-[80%] md:max-w-[60%] lg:max-w-[40%] p-4 overflow-hidden"
+                type="text"
+                bind:value={userInput}
+                placeholder="Type the hidden word"
+                on:keydown={handleKeyDown}
+                in:fly={{ x: 200, duration: 100 }}
+            />
+            {#if result}
+                <p
+                    class={result === "Correct!" ? "text-green-500" : "text-red-500"}
+                    in:scale={{ start: 0.5, duration: 300 }}
+                >
+                    {result}
+                </p>
+            {/if}
+        {/if}
+
+        {#if isCountdown}
+            <p class="text-8xl font-bold text-white">
+                {countdown}
             </p>
         {/if}
-    {/if}
-
-    {#if isCountdown}
-        <p class="text-8xl font-bold text-white">
-            {countdown}
-        </p>
+    {:else}
+        <div class="text-center p-4">
+            <p>Please enable localStorage in your browser settings to use this app.</p>
+        </div>
     {/if}
 </main>
