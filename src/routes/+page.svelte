@@ -120,7 +120,7 @@
             userInput = "";
             result = "";
             showInput = true;
-            console.log('This isn\'t a bug, it\'s some help for you in the form of Easter Egg 🧌' + `\nRandom Word: ${word}`)
+            console.log('This isn\'t a bug, it\'s some help for you in the form of an easter egg 🧌' + `\nRandom Word: ${word}`)
             if (isLocalStorageAvailable) {
                 localStorage.setItem("hiddenWord", word.toLowerCase());
             }
