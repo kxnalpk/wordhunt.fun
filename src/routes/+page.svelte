@@ -204,7 +204,7 @@
         {/if}
     {:else}
         <div class="text-center p-4">
-            <p>Please enable localStorage in your browser settings to use this app.</p>
+            <p>You have to enable localStorage in your browser settings to use this app.</p>
         </div>
     {/if}
 </main>
