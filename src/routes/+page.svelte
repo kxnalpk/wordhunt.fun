@@ -1,5 +1,4 @@
 <script context="module">
-    // Import statements
     import words from "../words.json";
     import Timer from "../lib/+timer.svelte";
 </script>
@@ -8,7 +7,6 @@
     import { onMount, onDestroy } from "svelte";
     import { fade, fly, scale } from 'svelte/transition';
 
-    // State variables
     let gameStarted = false;
     let randomString = "";
     let message = "Press 'Enter' to start the game";
@@ -17,21 +15,16 @@
     let isMobile = false;
     let showInput = false;
 
-    // New state variable for localStorage availability
     let isLocalStorageAvailable = true;
 
-    // Countdown variables
     let countdown = 3;
     let isCountdown = false;
 
-    // Game configuration
     let questionsCounter = 0;
     const maxQuestions = 3;
 
-    // Timer instance
     const timer = Timer();
 
-    // Utility function to check localStorage access
     function checkLocalStorageAccess() {
         try {
             localStorage.setItem("test", "test");
@@ -42,13 +35,11 @@
         }
     }
 
-    // Fetch a random word from the imported list
     function getRandomWord(): string {
         const randomIndex = Math.floor(Math.random() * words.length);
         return words[randomIndex];
     }
 
-    // Generate a random string embedding a word
     function embedWordInString(word: string, length: number): string {
         const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         let result = "";
@@ -67,7 +58,6 @@
         return result;
     }
 
-    // Initialize countdown for game start
     function startCountdown() {
         message = "";
         isCountdown = true;
@@ -81,7 +71,6 @@
         }, 1000);
     }
 
-    // Handle key events for game control
     function handleKeyDown(event: KeyboardEvent) {
         if (event.key === "Enter") {
             if (!gameStarted && !isCountdown) {
@@ -92,7 +81,6 @@
         }
     }
 
-    // Lifecycle hooks for adding/removing event listeners
     onMount(() => {
         isLocalStorageAvailable = checkLocalStorageAccess();
         isMobile = window.innerWidth < 769;
@@ -110,7 +98,6 @@
         }
     });
 
-    // Start the game by setting up the word and timer
     function startGame() {
         if (questionsCounter < maxQuestions) {
             timer.StartTimer();
@@ -130,7 +117,6 @@
         }
     }
 
-    // Check user input against the hidden word
     function checkUserInput() {
         if (isLocalStorageAvailable) {
             const trimmedInput = userInput.trim().toLowerCase();
@@ -146,7 +132,6 @@
         }
     }
 
-    // Finalize game and display results
     function finishGame() {
         showInput = false;
         timer.StopTimer();
